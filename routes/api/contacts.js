@@ -10,13 +10,15 @@ const {
 
 const router = express.Router();
 
-const contactSchema = Joi.object({
+const contactSchemaUpp = Joi.object({
   id: Joi.string().regex(/^[0-9]*$/),
   name: Joi.string(),
   email: Joi.string().email(),
   phone: Joi.string().regex(/^[0-9]*$/),
 });
-const contactSchemaUpp = Joi.object({
+
+
+const contactSchema = Joi.object({
   id: Joi.string()
     .regex(/^[0-9]*$/)
     .required(),
@@ -26,6 +28,9 @@ const contactSchemaUpp = Joi.object({
     .regex(/^[0-9]*$/)
     .required(),
 });
+
+
+
 const validator = (schema) => (req, res, next) => {
   const body = req.body;
   const validation = schema.validate(body);
@@ -37,6 +42,9 @@ const validator = (schema) => (req, res, next) => {
 
   return next();
 };
+
+
+
 router.get("/", async (req, res, next) => {
   const contactsList = await listContacts();
   res.json({
@@ -45,6 +53,8 @@ router.get("/", async (req, res, next) => {
     data: contactsList,
   });
 });
+
+
 
 router.get("/:contactId", async (req, res, next) => {
   const contactId = req.params.contactId;
@@ -63,6 +73,9 @@ router.get("/:contactId", async (req, res, next) => {
     });
   }
 });
+
+
+
 const createContact = async (req, res) => {
   const body = req.body;
   const { name, email, phone } = body;
@@ -83,6 +96,8 @@ const createContact = async (req, res) => {
     res.end();
   }
 };
+
+
 router.post("/", validator(contactSchema), createContact);
 
 router.delete("/:contactId", async (req, res, next) => {
@@ -117,6 +132,8 @@ const contactUpdate = async (req, res, next) => {
     });
   }
 };
-router.put("/:contactId", validator(contactSchema), contactUpdate);
+
+
+router.put("/:contactId", validator(contactSchemaUpp), contactUpdate);
 
 module.exports = router;
