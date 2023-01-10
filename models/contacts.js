@@ -1,5 +1,5 @@
 const { readFile, writeFile } = require("fs/promises");
-let node_uid = require("node-uid");
+
 const path = require("path");
 
 const contactsPath = path.resolve(__dirname, "../models/contacts.json");
@@ -37,7 +37,7 @@ const addContact = async (body) => {
   const contacts = JSON.parse(content);
   const contactName = contacts.some((el) => el.name === name);
   if (contactName) {
-    return { "message":"This contact already exists on the server" };
+    return { message: "This contact already exists on the server" };
   } else {
     contacts.push({ id: id, name: name, email: email, phone: phone });
     await writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
