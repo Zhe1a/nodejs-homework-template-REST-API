@@ -1,75 +1,68 @@
-const { readFile, writeFile } = require("fs/promises");
+const Contacts = require('./model');
 
-const path = require("path");
-
-const contactsPath = path.resolve(__dirname, "../models/contacts.json");
-
-const listContacts = async (req, res) => {
-  const content = await readFile(contactsPath, "utf-8");
-  const contacts = JSON.parse(content);
-  return contacts;
+const listContacts = async (req, res, next) => {
+try {
+  const item = await Contacts.find();
+  return res.status(200).json(item);
+} catch (error) {
+  res.send(error);
+}
 };
 
-const getContactById = async (contactId) => {
-  const content = await readFile(contactsPath, "utf-8");
-  const contacts = JSON.parse(content);
-  const contact = contacts.find((el) => el.id === contactId);
-  return contact;
-};
-
-const removeContact = async (contactId) => {
-  const content = await readFile(contactsPath, "utf-8");
-  const contacts = JSON.parse(content);
-  const contactRemove = contacts.find((el) => el.id === contactId);
-  if (contactRemove) {
-    const contact = contacts.filter((el) => el.id !== contactId);
-    contacts.push(contact);
-    await writeFile(contactsPath, JSON.stringify(contact, undefined, 2));
-    return true;
-  } else {
-    return false;
+const getContactById = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const item = await Contacts.findOne({ id: contactId });
+    if (item) {
+      return res.status(200).json(item);
+    } else {
+      return res.status(404).send({ message: "Not found" });
+    }
+  } catch (error) {
+    res.send(error);
   }
 };
 
-const addContact = async (body) => {
-  const { id, name, email, phone } = body;
-  const content = await readFile(contactsPath, "utf-8");
-  const contacts = JSON.parse(content);
-  const contactName = contacts.some((el) => el.name === name);
-  if (contactName) {
-    return { message: "This contact already exists on the server" };
-  } else {
-    contacts.push({ id: id, name: name, email: email, phone: phone });
-    await writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
+const removeContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const item = await Contacts.findOneAndDelete({ id: contactId });
+    if (item) {
+      res.status(200).send({ message: "contact deleted" });
+    } else {
+      res.status(404).send({ message: "Not found" });
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
-const updateContact = async (contactId, body) => {
-  const content = await readFile(contactsPath, "utf-8");
-  const contacts = JSON.parse(content);
-  const contact = contacts.find((el) => el.id === contactId);
+const addContact = async (req, res, next) => {
+  try {
+    const item = await Contacts.create(req.body);
+    return res.status(200).json(item);
+  } catch (error) {
+    next(error);
+  }
+};
 
-  if (contact) {
-    const { id, name, email, phone } = contact;
-    const contactAll = contacts.filter((el) => el.id !== contactId);
-    console.log(contactAll);
-    contactAll.push({
-      id,
-      name: body.name ? body.name : name,
-      email: body.email ? body.email : email,
-      phone: body.phone ? body.phone : phone,
-    });
-    await writeFile(contactsPath, JSON.stringify(contactAll, undefined, 2));
-    return {
-      status: "success",
-      code: 200,
-    };
-  } else {
-    return {
-      status: "success",
-      code: 404,
-      message: "Not found",
-    };
+const updateContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const newProperties = req.body;
+
+    const item = await Contacts.findOneAndUpdate(
+      { id: contactId },
+      { $set: newProperties },
+      { new: true }
+    );
+    if (item) {
+      res.status(200).json(item);
+    } else {
+      res.status(404).json({ message: "Not found" });
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
