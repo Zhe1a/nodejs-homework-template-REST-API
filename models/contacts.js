@@ -9,9 +9,8 @@ try {
 }
 };
 
-const getContactById = async (req, res, next) => {
+const getContactById = async (contactId) => {
   try {
-    const { contactId } = req.params;
     const item = await Contacts.findOne({ id: contactId });
     if (item) {
       return res.status(200).json(item);

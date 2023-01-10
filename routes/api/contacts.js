@@ -80,7 +80,7 @@ const createContact = async (req, res) => {
   const body = req.body;
   const { name, email, phone } = body;
   if (name && email && phone) {
-    const contact = await addContact(body);
+    const contact = await addContact(req);
     res.json({
       status: "success",
       code: 201,
@@ -101,8 +101,7 @@ const createContact = async (req, res) => {
 router.post("/", validator(contactSchema), createContact);
 
 router.delete("/:contactId", async (req, res, next) => {
-  const contactId = req.params.contactId;
-  const contact = await removeContact(contactId);
+  const contact = await removeContact(req);
   if (contact) {
     res.json({
       status: "success",
