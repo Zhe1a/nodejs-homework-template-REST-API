@@ -8,42 +8,13 @@ const {
   updateContact,
 } = require("../../models/contacts");
 
+const {
+  validator,
+  contactSchema,
+  contactSchemaUpp,
+} = require("../../validation/validation");
+
 const router = express.Router();
-
-const contactSchemaUpp = Joi.object({
-  id: Joi.string().regex(/^[0-9]*$/),
-  name: Joi.string(),
-  email: Joi.string().email(),
-  phone: Joi.string().regex(/^[0-9]*$/),
-});
-
-
-const contactSchema = Joi.object({
-  id: Joi.string()
-    .regex(/^[0-9]*$/)
-    .required(),
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  phone: Joi.string()
-    .regex(/^[0-9]*$/)
-    .required(),
-});
-
-
-
-const validator = (schema) => (req, res, next) => {
-  const body = req.body;
-  const validation = schema.validate(body);
-
-  if (validation.error) {
-    res.status(400).send(validation.error);
-    return;
-  }
-
-  return next();
-};
-
-
 
 router.get("/", async (req, res, next) => {
   const contactsList = await listContacts();
@@ -53,8 +24,6 @@ router.get("/", async (req, res, next) => {
     data: contactsList,
   });
 });
-
-
 
 router.get("/:contactId", async (req, res, next) => {
   const contactId = req.params.contactId;
@@ -74,11 +43,8 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
-
-
 const createContact = async (req, res) => {
-  const body = req.body;
-  const { name, email, phone } = body;
+  const { name, email, phone } = req.body;
   if (name && email && phone) {
     const contact = await addContact(req);
     res.json({
@@ -96,7 +62,6 @@ const createContact = async (req, res) => {
     res.end();
   }
 };
-
 
 router.post("/", validator(contactSchema), createContact);
 
@@ -120,9 +85,12 @@ router.delete("/:contactId", async (req, res, next) => {
 const contactUpdate = async (req, res, next) => {
   const { name, email, phone } = req.body;
   if (name || email || phone) {
-    const contactId = req.params.contactId;
-    const contactUpdateContact = await updateContact(contactId, req.body);
-    res.json(contactUpdateContact);
+    const contactUpdateContact = await updateContact(req);
+    res.json({
+      status: "success",
+      code: 200,
+      data: contactUpdateContact,
+    });
   } else {
     res.json({
       status: "success",
@@ -131,7 +99,6 @@ const contactUpdate = async (req, res, next) => {
     });
   }
 };
-
 
 router.put("/:contactId", validator(contactSchemaUpp), contactUpdate);
 
