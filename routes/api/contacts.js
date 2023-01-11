@@ -1,5 +1,5 @@
 const express = require("express");
-const Joi = require("joi");
+
 const {
   listContacts,
   getContactById,
@@ -43,8 +43,11 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
-const createContact = async (req, res) => {
-  const { name, email, phone } = req.body;
+
+const createContact = async(req, res, next) => {
+  const body = req.body;
+  const  {name, email, phone} = body
+  console.log( body,name, email, phone);
   if (name && email && phone) {
     const contact = await addContact(req);
     res.json({
@@ -62,9 +65,7 @@ const createContact = async (req, res) => {
     res.end();
   }
 };
-
 router.post("/", validator(contactSchema), createContact);
-
 router.delete("/:contactId", async (req, res, next) => {
   const contact = await removeContact(req);
   if (contact) {

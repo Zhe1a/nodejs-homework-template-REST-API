@@ -21,8 +21,7 @@ const contactSchemaUpp = Joi.object({
 
 const contactSchema = Joi.object({
   id: Joi.string()
-    .regex(/^[0-9]*$/)
-    .required(),
+    .regex(/^[0-9]*$/),
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   phone: Joi.string()
