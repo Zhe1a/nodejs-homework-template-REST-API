@@ -7,7 +7,7 @@ const { loginSchema, singnupSchema } = require("../../validation/authSchema");
 const validator = require("../../Middleware/validator");
 const logout = require("../../models/logaut");
 const UserMiddleware = require("../../Middleware/UserMiddleware");
-const current = require("../../models/current");
+const getCurrent = require("../../models/getCurrent");
 
 const loginUser = async (req, res, next) => {
   const login = await getUser(req);
@@ -23,5 +23,12 @@ const signup = async (req, res, next) => {
 router.post("/signup", validator(singnupSchema), signup);
 
 router.post('/logaut',UserMiddleware, logout)
+
+const current = async (req, res, next) => {
+  const curren = await getCurrent(req);
+  res.json(curren);
+};
 router.get("/current", UserMiddleware, current);
+
+
 module.exports = router;
