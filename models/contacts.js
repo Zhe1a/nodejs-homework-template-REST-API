@@ -1,4 +1,4 @@
-const Contacts = require("./model");
+const Contacts = require("../validation/contacts");
 
 const listContacts = async (req, res, next) => {
   try {
@@ -31,13 +31,12 @@ const removeContact = async (req, res, next) => {
 const addContact = async (req, res, next) => {
   try {
     const { name } = req.body;
-    const contacts = await Contacts.find();
-    const contactName = contacts.some((el) => el.name === name);
+    const contactName = await Contacts.findOne({ name });
     if (contactName) {
-      return { "message":"This contact already exists on the server" };
+      return { message: "This contact already exists on the server" };
     } else {
       const item = await Contacts.create(req.body);
-      return false
+      return false;
     }
   } catch (error) {
     next(error);

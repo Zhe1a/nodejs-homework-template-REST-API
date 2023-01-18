@@ -9,11 +9,11 @@ const {
 } = require("../../models/contacts");
 
 const {
-  validator,
   contactSchema,
   contactSchemaUpp,
-} = require("../../validation/validation");
+} = require("../../validation/contactsSchema");
 
+const validator = require("../../Middleware/validator");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -43,11 +43,10 @@ router.get("/:contactId", async (req, res, next) => {
   }
 });
 
-
-const createContact = async(req, res, next) => {
+const createContact = async (req, res, next) => {
   const body = req.body;
-  const  {name, email, phone} = body
-  console.log( body,name, email, phone);
+  const { name, email, phone } = body;
+  console.log(body, name, email, phone);
   if (name && email && phone) {
     const contact = await addContact(req);
     res.json({

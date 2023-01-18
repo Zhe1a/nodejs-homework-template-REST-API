@@ -1,16 +1,4 @@
-const Joi = require('joi');
-
-const validator = (schema) => (req, res, next) => {
-  const body = req.body;
-  const validation = schema.validate(body);
-
-  if (validation.error) {
-    res.status(400).send(validation.error);
-    return;
-  }
-
-  return next();
-};
+const Joi = require("joi");
 
 const contactSchemaUpp = Joi.object({
   id: Joi.string().regex(/^[0-9]*$/),
@@ -20,8 +8,7 @@ const contactSchemaUpp = Joi.object({
 });
 
 const contactSchema = Joi.object({
-  id: Joi.string()
-    .regex(/^[0-9]*$/),
+  id: Joi.string().regex(/^[0-9]*$/),
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   phone: Joi.string()
@@ -30,7 +17,6 @@ const contactSchema = Joi.object({
 });
 
 module.exports = {
-  validator,
   contactSchema,
   contactSchemaUpp,
 };
