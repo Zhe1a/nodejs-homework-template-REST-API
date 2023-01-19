@@ -1,4 +1,4 @@
-const User = require("../validation/users");
+const User = require("../../validation/users");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");

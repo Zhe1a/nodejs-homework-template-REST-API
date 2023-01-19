@@ -1,6 +1,17 @@
 const { Schema, model } = require("mongoose");
 const emailRegExp = /[\w-]+@([\w-]+\.)+[\w-]+/;
 
+const photoSchema = new Schema({
+  content: {
+    type: Buffer,
+    require: true,
+  },
+  mediaType: {
+    type: String,
+    require: true,
+  },
+});
+
 const user = new Schema(
   {
     password: {
@@ -21,6 +32,10 @@ const user = new Schema(
     token: {
       type: String,
       default: null,
+    },
+    Photo: {
+      type: photoSchema,
+      avatarURL: String,
     },
   },
   { versionKey: false, timestamps: true }

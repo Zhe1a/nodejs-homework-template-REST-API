@@ -11,7 +11,7 @@ const {
 const {
   contactSchema,
   contactSchemaUpp,
-} = require("../../validation/contactsSchema");
+} = require("../../Schema/contactsSchema");
 
 const validator = require("../../Middleware/validator");
 const router = express.Router();

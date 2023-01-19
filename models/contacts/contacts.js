@@ -1,4 +1,4 @@
-const Contacts = require("../validation/contacts");
+const Contacts = require("../../validation/contacts");
 
 const listContacts = async (req, res, next) => {
   try {

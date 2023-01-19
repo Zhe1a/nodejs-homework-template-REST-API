@@ -1,16 +1,17 @@
 const express = require("express");
-const getAddUsers = require("../../models/signup");
-const getUser = require("../../models/login");
+const getAddUsers = require("../../models/auth/signup");
+const getUser = require("../../models/auth/login");
 const router = express.Router();
 
-const { loginSchema, singnupSchema } = require("../../validation/authSchema");
+const { loginSchema, singnupSchema } = require("../../Schema/authSchema");
 const validator = require("../../Middleware/validator");
-const logout = require("../../models/logaut");
+const logout = require("../../models/auth/logaut");
 const UserMiddleware = require("../../Middleware/UserMiddleware");
-const getCurrent = require("../../models/getCurrent");
+const getCurrent = require("../../models/auth/getCurrent");
 
 const loginUser = async (req, res, next) => {
   const login = await getUser(req);
+  UserMiddleware(login)
   res.json(login);
 };
 router.post("/login", validator(loginSchema), loginUser);

@@ -1,4 +1,4 @@
-const Users = require("../validation/users");
+const Users = require("../../validation/users");
 const bcrypt = require("bcrypt");
 
 const getAddUsers = async (req, res, next) => {
