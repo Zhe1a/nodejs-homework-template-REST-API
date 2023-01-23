@@ -6,7 +6,7 @@ const {
   removeContact,
   addContact,
   updateContact,
-} = require("../../models/contacts");
+} = require("../../models/contacts/contacts");
 
 const {
   contactSchema,
@@ -14,6 +14,7 @@ const {
 } = require("../../Schema/contactsSchema");
 
 const validator = require("../../Middleware/validator");
+const UserMiddleware = require("../../Middleware/UserMiddleware");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -45,6 +46,7 @@ router.get("/:contactId", async (req, res, next) => {
 
 const createContact = async (req, res, next) => {
   const body = req.body;
+
   const { name, email, phone } = body;
   console.log(body, name, email, phone);
   if (name && email && phone) {
@@ -64,7 +66,7 @@ const createContact = async (req, res, next) => {
     res.end();
   }
 };
-router.post("/", validator(contactSchema), createContact);
+router.post("/",UserMiddleware, validator(contactSchema), createContact);
 router.delete("/:contactId", async (req, res, next) => {
   const contact = await removeContact(req);
   if (contact) {
@@ -100,6 +102,6 @@ const contactUpdate = async (req, res, next) => {
   }
 };
 
-router.put("/:contactId", validator(contactSchemaUpp), contactUpdate);
+router.put("/:contactId",UserMiddleware, validator(contactSchemaUpp), contactUpdate);
 
 module.exports = router;

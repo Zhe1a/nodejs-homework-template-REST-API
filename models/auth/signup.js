@@ -1,8 +1,10 @@
 const Users = require("../../validation/users");
 const bcrypt = require("bcrypt");
+var gravatar = require("gravatar");
 
 const getAddUsers = async (req, res, next) => {
   const { email, password, subscription } = req.body;
+  let url = gravatar.url(email);
 
   const user = await Users.findOne({ email });
 
@@ -16,6 +18,7 @@ const getAddUsers = async (req, res, next) => {
   const hashPasswordUser = await bcrypt.hash(password, 10);
   const newUser = await Users.create({
     ...req.body,
+    avatarURL: url,
     password: hashPasswordUser,
   });
 

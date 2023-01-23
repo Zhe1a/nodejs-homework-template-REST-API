@@ -1,22 +1,27 @@
 const express = require("express");
+const upload = require("../../Middleware/multer");
+const UserMiddleware = require("../../Middleware/UserMiddleware");
 
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
 const validator = require("../../Middleware/validator");
-const avatarGet = require("../../models/avatar/avatar");
+const avatarPost = require("../../models/avatar/avatarsPost");
+const avatarsSchema = require("../../Schema/avatrsSchema");
 
-const avatarsUser = async (req, res, next) => {
-  const avatar = await avatarGet(req);
+const avatars = async (req, res, next) => {
+  const { headers, body, file, user } = req;
+  console.log(body);
+  const avatar = await avatarPost(req);
+
   return res.json(avatar);
 };
-router.get("/a", avatarsUser);
 
-const avatarsPost = async (req, res, next) => {
-  const avatar = await avatarUser(req);
-  return res.json(avatar);
-};
-router.post("/avatars", avatarsPost);
+router.post(
+  "/",
+  UserMiddleware,
+  validator(avatarsSchema),
+  upload.single("file"),
+  avatars
+);
 
 module.exports = router;

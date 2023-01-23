@@ -1,5 +1,5 @@
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { name, email, _id, subscription, avatarURL } = req.user;
   if (!req.user) {
     return {
       status: "success",
@@ -13,6 +13,9 @@ const getCurrent = async (req, res) => {
     status: "success",
     code: 202,
     ResponseBody: {
+      id: _id,
+      name,
+      avatarURL,
       email,
       subscription,
     },

@@ -2,7 +2,8 @@ const Contacts = require("../../validation/contacts");
 
 const listContacts = async (req, res, next) => {
   try {
-    const item = await Contacts.find();
+    const { id } = req.user;
+    const item = await Contacts.find({ owner: id });
     return item;
   } catch (error) {
     res.send(error);
@@ -31,11 +32,13 @@ const removeContact = async (req, res, next) => {
 const addContact = async (req, res, next) => {
   try {
     const { name } = req.body;
+    const { id } = req.user;
+
     const contactName = await Contacts.findOne({ name });
     if (contactName) {
       return { message: "This contact already exists on the server" };
     } else {
-      const item = await Contacts.create(req.body);
+      const item = await Contacts.create({ ...req.body, owner: id });
       return false;
     }
   } catch (error) {
