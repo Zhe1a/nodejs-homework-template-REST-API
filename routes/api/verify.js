@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 const verificationToken = require("../../models/email/verificationToken");
-const currentEmail = require("../../");
+const currentEmail = require("../../models/email/currentEmail");
 
 router.get("/:", async (req, res, next) => {
   const verification = await verificationToken(req);
