@@ -6,7 +6,7 @@ const router = express.Router();
 
 const validator = require("../../Middleware/validator");
 const avatarPost = require("../../models/avatar/avatarsPost");
-const avatarsSchema = require("../../Schema/avatrsSchema");
+const {avatarsSchema} = require("../../Schema/avatrsSchema");
 
 const avatars = async (req, res, next) => {
   const avatar = await avatarPost(req);
