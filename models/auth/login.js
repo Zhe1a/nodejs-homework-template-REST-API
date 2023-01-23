@@ -11,8 +11,16 @@ const SECRET = process.env.SECRET;
 
 const getUser = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
 
+  const user = await User.findOne({ email });
+  const { verify } = user;
+  if (!verify) {
+    return {
+      status: "success",
+      code: 401,
+      message: "email is not verified",
+    };
+  }
   if (!user) {
     return {
       status: "success",

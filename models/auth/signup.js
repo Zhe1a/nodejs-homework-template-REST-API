@@ -1,8 +1,10 @@
 const Users = require("../../validation/users");
 const bcrypt = require("bcrypt");
 var gravatar = require("gravatar");
+const confirmation = require("../email/confirmation");
 
-const getAddUsers = async (req, res, next) => {
+const { v4: uuidv4 } = require("uuid");
+const AddUsers = async (req, res, next) => {
   const { email, password, subscription } = req.body;
   let url = gravatar.url(email);
 
@@ -16,11 +18,16 @@ const getAddUsers = async (req, res, next) => {
     };
   }
   const hashPasswordUser = await bcrypt.hash(password, 10);
+
+  const token = uuidv4();
   const newUser = await Users.create({
     ...req.body,
     avatarURL: url,
     password: hashPasswordUser,
+    verificationToken: token,
   });
+
+  await confirmation(req.headers, email, token);
 
   return {
     status: "success",
@@ -31,4 +38,4 @@ const getAddUsers = async (req, res, next) => {
     },
   };
 };
-module.exports = getAddUsers;
+module.exports = AddUsers;

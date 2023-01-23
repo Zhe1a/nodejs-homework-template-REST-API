@@ -6,7 +6,6 @@ const updateCurrent = require("../auth/updateCurrent");
 const avatarPost = async (req, res, next) => {
   try {
     const { headers, body, file, user } = req;
-    console.log(body);
     if (!file) {
       return { status: 500, message: "file" };
     }

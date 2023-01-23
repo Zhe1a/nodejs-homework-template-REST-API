@@ -9,10 +9,7 @@ const avatarPost = require("../../models/avatar/avatarsPost");
 const avatarsSchema = require("../../Schema/avatrsSchema");
 
 const avatars = async (req, res, next) => {
-  const { headers, body, file, user } = req;
-  console.log(body);
   const avatar = await avatarPost(req);
-
   return res.json(avatar);
 };
 

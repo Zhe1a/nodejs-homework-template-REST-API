@@ -1,5 +1,5 @@
 const express = require("express");
-const getAddUsers = require("../../models/auth/signup");
+const AddUsers = require("../../models/auth/signup");
 const getUser = require("../../models/auth/login");
 const router = express.Router();
 
@@ -11,13 +11,12 @@ const getCurrent = require("../../models/auth/getCurrent");
 
 const loginUser = async (req, res, next) => {
   const login = await getUser(req);
-  UserMiddleware(login)
   res.json(login);
 };
 router.post("/login", validator(loginSchema), loginUser);
 
 const signup = async (req, res, next) => {
-  const signup = await getAddUsers(req);
+  const signup = await AddUsers(req);
   res.json(signup);
 };
 
